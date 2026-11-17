@@ -1,3 +1,6 @@
-// Patrol vehicles use the same road-scale chassis as local traffic.
+import * as T from '../vendor/three/three.module.min.js';
 import {makeCar} from './traffic.js';
-export function makePolice(scene){return [0,1].map((n)=>{const car=makeCar(scene,n?'#f1eee5':'#e9e6dc',true);scene.add(car);return car})}
+
+export const OFFICER_COUNT=3;
+export function makePolice(scene){return [0,1].map((n)=>{const car=makeCar(scene,n?'#f1eee5':'#e9e6dc',true);car.userData.role='Harbor Patrol';scene.add(car);return car})}
+export function makeOfficers(scene){const navy=new T.MeshStandardMaterial({color:'#202c42',roughness:.85}),skin=new T.MeshStandardMaterial({color:'#bc8567'}),brass=new T.MeshStandardMaterial({color:'#e4bc69',metalness:.35});return Array.from({length:OFFICER_COUNT},(_,index)=>{const officer=new T.Group();officer.userData.uniformed=true;function part(geo,mat,x,y,z){const mesh=new T.Mesh(geo,mat);mesh.position.set(x,y,z);mesh.castShadow=true;officer.add(mesh);return mesh}part(new T.BoxGeometry(.5,.76,.3),navy,0,1.08,0);part(new T.SphereGeometry(.18,10,8),skin,0,1.62,0);part(new T.CylinderGeometry(.2,.22,.16,8),navy,0,1.82,0);part(new T.BoxGeometry(.42,.06,.32),navy,0,1.76,-.08);part(new T.BoxGeometry(.13,.18,.035),brass,.13,1.25,-.17);for(const side of [-1,1]){part(new T.BoxGeometry(.16,.65,.18),navy,side*.36,1.08,0);part(new T.BoxGeometry(.17,.68,.2),navy,side*.15,.35,0)}officer.position.set(index*2,0,index*-2);scene.add(officer);return officer})}
