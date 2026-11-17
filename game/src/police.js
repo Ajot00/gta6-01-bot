@@ -1,2 +1,3 @@
-import * as T from '../vendor/three/three.module.min.js';
-export function makePolice(scene){return [-12,12].map((z,i)=>{const g=new T.Group();const body=new T.Mesh(new T.BoxGeometry(3.6,1.1,6.2),new T.MeshStandardMaterial({color:'#e8e8df'}));body.position.y=.8;g.add(body);const roof=new T.Mesh(new T.BoxGeometry(2.4,.8,2.8),new T.MeshStandardMaterial({color:'#263744'}));roof.position.set(0,1.55,-.25);g.add(roof);for(const s of [-1,1]){const light=new T.Mesh(new T.BoxGeometry(1,.2,.3),new T.MeshStandardMaterial({color:s<0?'#ff2424':'#247dff',emissive:s<0?'#ff1111':'#135dff',emissiveIntensity:2}));light.position.set(s*.55,2.05,.2);g.add(light)}g.position.set(i?8:-8,0,12+i*10);scene.add(g);return g})}
+// Patrol vehicles use the same road-scale chassis as local traffic.
+import {makeCar} from './traffic.js';
+export function makePolice(scene){return [0,1].map((n)=>{const car=makeCar(scene,n?'#f1eee5':'#e9e6dc',true);scene.add(car);return car})}
