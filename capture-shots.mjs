@@ -1,31 +1,7 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { join } from 'node:path';
-
-const root = fileURLToPath(new URL('.', import.meta.url));
-const game = new URL('./game/index.html', import.meta.url).href;
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-let sequence = 0;
-async function capture(number, name) {
-  const tab = await (await fetch('http://127.0.0.1:9223/json/new?about:blank', { method: 'PUT' })).json();
-  const ws = new WebSocket(tab.webSocketDebuggerUrl);
-  await new Promise((resolve, reject) => { ws.onopen = resolve; ws.onerror = reject; });
-  const pending = new Map();
-  ws.onmessage = event => { const msg = JSON.parse(event.data); if (msg.id && pending.has(msg.id)) { pending.get(msg.id)(msg.result || {}); pending.delete(msg.id); } };
-  const send = (method, params = {}) => new Promise(resolve => { const id = ++sequence; pending.set(id, resolve); ws.send(JSON.stringify({ id, method, params })); });
-  await send('Page.enable');
-  await send('Runtime.enable');
-  await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
-  await send('Page.navigate', { url: `${game}?shot=${number}` });
-  for (let i=0;i<30;i++) { await sleep(250); const value=await send('Runtime.evaluate',{expression:'window.__shotReady===true',returnByValue:true}); if(value.result?.value)break; }
-  await sleep(1400);
-  const image=await send('Page.captureScreenshot',{format:'jpeg',quality:78,fromSurface:true});
-  writeFileSync(join(root,'screenshots',name),Buffer.from(image.data,'base64'));
-  ws.close();
-  return Buffer.from(image.data,'base64').length;
-}
-mkdirSync(join(root,'screenshots'),{recursive:true});
-for (const [number,name] of [[1,'1-cover.jpg'],[2,'2-busted.jpg'],[3,'3-city.jpg'],[4,'4-east.jpg']]) {
-  const size=await capture(number,name);
-  console.log(`${name}: ${size} bytes`);
-}
+import fs from 'node:fs';
+const ws=new WebSocket('ws://127.0.0.1:9223/devtools/browser/a7e28695-081f-4561-b8f0-6a7e33f9be6b');
+await new Promise((resolve,reject)=>{ws.onopen=resolve;ws.onerror=reject});let seq=0;const waits=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&waits.has(m.id)){waits.get(m.id)(m);waits.delete(m.id)}};
+const send=(method,params={},sessionId)=>new Promise(resolve=>{const id=++seq;waits.set(id,resolve);ws.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}))});
+const names=['1-cover','2-busted','3-city','4-east'];
+for(let i=1;i<=4;i++){const target=await send('Target.createTarget',{url:'about:blank'});const id=target.result.targetId;const attached=await send('Target.attachToTarget',{targetId:id,flatten:true});const session=attached.result.sessionId;await send('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false},session);await send('Page.enable',{},session);await send('Page.navigate',{url:`file://${process.cwd()}/game/index.html?shot=${i}`},session);await new Promise(r=>setTimeout(r,3000));const shot=await send('Page.captureScreenshot',{format:'jpeg',quality:82,fromSurface:true},session);fs.writeFileSync(`screenshots/${names[i-1]}.jpg`,Buffer.from(shot.result.data,'base64'));await send('Target.closeTarget',{targetId:id})}
+ws.close();

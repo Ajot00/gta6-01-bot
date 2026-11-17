@@ -1,0 +1,10 @@
+import {WebSocket} from 'ws';
+const ws=new WebSocket('ws://127.0.0.1:9223/devtools/browser/a7e28695-081f-4561-b8f0-6a7e33f9be6b');
+await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=0;const pending=new Map(),errors=[],network=[];
+ws.onmessage=e=>{let m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}else if(m.method==='Runtime.exceptionThrown'||m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')errors.push(m.method);else if(m.method==='Network.requestWillBeSent'&&/^https?:/.test(m.params.request.url))network.push(m.params.request.url)};
+const send=(method,params={},sessionId)=>new Promise(r=>{let id=++n;pending.set(id,r);ws.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}))});
+const target=(await send('Target.createTarget',{url:'about:blank'})).result.targetId,session=(await send('Target.attachToTarget',{targetId:target,flatten:true})).result.sessionId;
+await send('Runtime.enable',{},session);await send('Network.enable',{},session);await send('Page.enable',{},session);await send('Page.navigate',{url:`file://${process.cwd()}/game/index.html`},session);
+await new Promise(r=>setTimeout(r,2500));for(const key of ['w','e','f'])await send('Input.dispatchKeyEvent',{type:'keyDown',key,code:'Key'+key.toUpperCase(),windowsVirtualKeyCode:key.toUpperCase().charCodeAt(0)},session);
+await new Promise(r=>setTimeout(r,500));let hud=(await send('Runtime.evaluate',{expression:'JSON.stringify({cash:document.querySelector("#cash").textContent,stars:document.querySelector("#stars").textContent,objective:document.querySelector("#objective").textContent,speed:document.querySelector("#speed").textContent})',returnByValue:true},session)).result.result.value;
+console.log(JSON.stringify({errors,network,hud}));await send('Target.closeTarget',{targetId:target});ws.close();if(errors.length||network.length)process.exitCode=1;

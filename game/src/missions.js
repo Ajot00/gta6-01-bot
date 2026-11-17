@@ -1,2 +1,1 @@
-export function createMission(city){return {name:'GLASSLINE RUN',objective:'Reach the glassline drop',marker:city.drop,complete:false,payout:1250}}
-export function updateMission(m,player){if(!m.complete&&player.position.distanceTo(m.marker.position)<7){m.complete=true;return true}return false}
+export const phases=[{title:'Reach the marked package',name:'PICKUP',at:[25,0,-28]},{title:'Take the Glassline package to Pier 9',name:'DELIVERY',at:[15,0,-118]},{title:'Lose Harbor Patrol',name:'ESCAPE',at:[-45,0,-80]}];export let phase=0,cash=4820,stolen=0;export function advance(){phase=Math.min(2,phase+1);cash+=1250}export function current(){return phases[phase]}
