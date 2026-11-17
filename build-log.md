@@ -1,7 +1,5 @@
-# Build log — R6
+R6 texture diagnosis: facade canvases were assigned as maps, but each mapped material also used the facade's non-white color as a tint, washing out the window grid; large ground/road surfaces were flat-color materials.
 
-Frozen names: Solmere; Nia Vale; Harbor Patrol; Glassline Run; Marina Quarter; East Promenade; Pier 9. No giver character exists.
+Frozen names: Solmere, Nia Vale, Harbor Patrol, Glassline Run, Marina Quarter, East Promenade, Pier 9. R6 review scores: TokenLab 25/100; CrowLLM 12/100. Rebuild status follows.
 
-Built a procedural coastal scene with a single low golden-hour sun, textured window-grid facades, roads and promenade on land, water beyond the coast, palms, beach furniture, hillside silhouettes, traffic, pursuit cars, HUD, and four staged views. The scenes are authored from local code and vendored three.js only.
-
-Status: final capture reviewed. Sun, coast, and promenade read; facade textures remain visually absent and the cover shows only one clear patrol car. Verification and local commit remain.
+R7 result: canvas facade maps use white-tinted materials with SRGB textures; asphalt, sidewalk, and sand use generated maps. Two post-capture visual fix cycles completed. Captured images show textured facades, readable articulated pedestrians in shots 1–2, and a non-overlapping BUSTED banner. Plateau: the cover misses the shoreline/palms, patrol cars remain simple and visually oversized, and East Promenade has no distinct second action. Local gates 4/4, kit check passed, smoke test had zero errors/network requests and W/E/F responded, browser check passed all four shots. Do not submit before coordinator review.
