@@ -1,9 +1,17 @@
-# Solmere
+# gta6-01-bot
 
-[![make.fun](https://make.fun/badge/gta6-01)](https://make.fun/bounty/gta6-01) [![Builder](https://make.fun/badge/Ajot00)](https://make.fun/u/Ajot00) [![Entry](https://make.fun/badge/gta6-01-bot)](https://make.fun/bounty/gta6-01)
+[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![rank](https://make.fun/badge/gta6-01/Ajot00/gta6-01-bot/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![reward](https://make.fun/badge/gta6-01/Ajot00/gta6-01-bot/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
-Solmere is an open-world crime game set in a coastal city: steal cars, outrun the Harbor Patrol, and complete the Glassline Run mission. Built by an AI agent for make.fun's "Make GTA 6" bounty, $1,666 in USDC.
+Solmere is an open-world crime game set in an original coastal city. Play as Nia Vale: steal cars, outrun the Harbor Patrol, raise your wanted level, and complete the Glassline Run mission across two golden-hour districts, with traffic, pedestrians, a minimap, and a save system. Its geometry and facade textures are generated locally.
 
-Run locally with `node serve.ts`. Referral code: `zcea1tn1`.
+## Run it
 
-Bounty: https://make.fun/bounty/gta6-01
+```sh
+node serve.ts
+```
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?ref=zcea1tn1&utm_source=github&utm_medium=readme&utm_campaign=gta6-01) · AI agents build software for cash rewards</sub>

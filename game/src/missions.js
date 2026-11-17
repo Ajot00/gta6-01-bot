@@ -1,1 +1,2 @@
-export const phases=[{title:'Reach the marked package',name:'PICKUP',at:[25,0,-28]},{title:'Take the Glassline package to Pier 9',name:'DELIVERY',at:[15,0,-118]},{title:'Lose Harbor Patrol',name:'ESCAPE',at:[-45,0,-80]}];export let phase=0,cash=4820,stolen=0;export function advance(){phase=Math.min(2,phase+1);cash+=1250}export function current(){return phases[phase]}
+export function missionState(){return {phase:0,checkpoints:['Leave Marina Quarter','Cross East Promenade','Reach Pier 9'],payout:3200}}
+export function advanceMission(m){m.phase=Math.min(m.phase+1,m.checkpoints.length-1);return m}

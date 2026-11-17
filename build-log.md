@@ -1,5 +1,7 @@
-# Solmere — build log
+# Build log — R6
 
-Frozen names: City Solmere; lead Nia Vale; police Harbor Patrol; mission Glassline Run; districts Marina Quarter and East Promenade; destination Pier 9. No giver character.
+Frozen names: Solmere; Nia Vale; Harbor Patrol; Glassline Run; Marina Quarter; East Promenade; Pier 9. No giver character exists.
 
-Fresh single-session build. The game uses procedural geometry, a low golden-hour directional sun, road traffic and pedestrians, two pursuing patrol units, staged shot poses, a minimap, HUD, and a three-checkpoint delivery sequence. First review found simple low-poly frames with readable HUD, but pedestrian silhouettes and the waterfront view do not meet the intended visual quality. No submission was made.
+Built a procedural coastal scene with a single low golden-hour sun, textured window-grid facades, roads and promenade on land, water beyond the coast, palms, beach furniture, hillside silhouettes, traffic, pursuit cars, HUD, and four staged views. The scenes are authored from local code and vendored three.js only.
+
+Status: final capture reviewed. Sun, coast, and promenade read; facade textures remain visually absent and the cover shows only one clear patrol car. Verification and local commit remain.

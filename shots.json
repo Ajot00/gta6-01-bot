@@ -1,5 +1,5 @@
 [
-  {"name":"1-cover.jpg","query":"?shot=1"},
+  {"name":"1-cover.jpg","query":"?shot=1&seed=1"},
   {"name":"2-busted.jpg","query":"?shot=2"},
   {"name":"3-city.jpg","query":"?shot=3"},
   {"name":"4-east.jpg","query":"?shot=4"}

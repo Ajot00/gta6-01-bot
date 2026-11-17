@@ -1,27 +1,5 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { spawnSync } from 'node:child_process';
-
-const root = path.dirname(new URL(import.meta.url).pathname);
-const out = path.join(root, 'out');
-const run = spawnSync(process.execPath, [path.join(root, 'main.ts')], { cwd: root, env: { ...process.env, MAKEFUN_OUTPUT_DIR: out }, encoding: 'utf8' });
-if (run.status !== 0) throw new Error(`build failed: ${run.stderr.slice(0, 1200)}`);
-const files = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(path.join(dir, e.name)) : [path.join(dir, e.name)]);
-const gameFiles = files(path.join(out, 'game'));
-const shots = files(path.join(root, 'screenshots'));
-const size = (arr) => arr.reduce((n, f) => n + fs.statSync(f).size, 0);
-const html = fs.readFileSync(path.join(root, 'game/index.html'), 'utf8');
-const paths = [...html.matchAll(/(?:src|href)=["']([^"']+)["']/g)].map(m => m[1]);
-const checks = {
-  game_files: gameFiles.length > 0 && gameFiles.length <= 993 && size(gameFiles) <= 48 * 1024 * 1024 && gameFiles.every(f => fs.lstatSync(f).isFile() && Buffer.byteLength(path.relative(out, f)) <= 1000) && fs.statSync(path.join(out, 'game/index.html')).size <= 1024 * 1024,
-  references: paths.every(p => !/^https?:|^\/\//i.test(p) && !p.startsWith('..')),
-  screenshots: shots.length >= 3 && shots.length <= 4 && shots.every(f => fs.statSync(f).size <= 256 * 1024 && /\.(png|jpe?g)$/i.test(f)),
-  dossier_matches: fs.existsSync(path.join(out, 'dossier.json'))
-};
-for (const [k,v] of Object.entries(checks)) console.log(`${v ? 'PASS' : 'FAIL'} ${k}`);
-console.log(`PASS COUNT ${Object.values(checks).filter(Boolean).length}/4`);
-const kit = process.env.MAKEFUN_KIT || '/home/hatch/workspace/makefun/kit-gta6-01/gta6-01-kit/cli/makefun.mjs';
-const check = spawnSync(process.execPath, [kit, 'check'], { cwd: root, encoding: 'utf8' });
-console.log(`KIT ${check.status === 0 ? 'PASS' : 'FAIL'} ${check.status}`);
-if (check.status !== 0) process.exitCode = 1;
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';import {buildDossier} from './vendor/makefun-game.ts';
+const root=path.dirname(fileURLToPath(import.meta.url)),out=process.env.MAKEFUN_OUTPUT_DIR||'/output';const run=spawnSync(process.execPath,[path.join(root,'main.ts')],{cwd:root,env:{...process.env,MAKEFUN_OUTPUT_DIR:out},encoding:'utf8'});if(run.status!==0)throw Error(`build failed: ${run.stderr.slice(0,400)}`);
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);const game=walk(path.join(out,'game')),shots=walk(path.join(root,'screenshots'));const bytes=a=>a.reduce((n,f)=>n+fs.statSync(f).size,0),gameRoot=path.join(out,'game');const html=fs.readFileSync(path.join(gameRoot,'index.html'),'utf8'),refs=[...html.matchAll(/(?:src|href)=["']([^"']+)["']/g)].map(x=>x[1]);for(const f of game.filter(x=>/\.js$/.test(x))){const s=fs.readFileSync(f,'utf8');for(const m of s.matchAll(/(?:from\s*|import\s*\()['"]([^'"]+)['"]/g))refs.push(path.relative(gameRoot,path.resolve(path.dirname(f),m[1])))}const refsOK=refs.every(p=>p.startsWith('data:')||(!/^https?:|^\/\//i.test(p)&&!p.startsWith('..')&&fs.existsSync(path.join(gameRoot,p))));
+const imageOK=f=>{const b=fs.readFileSync(f);if(b[0]===0xff&&b[1]===0xd8){let i=2;while(i<b.length-9){if(b[i]!==0xff){i++;continue}const marker=b[i+1],len=b.readUInt16BE(i+2);if([0xc0,0xc1,0xc2,0xc3,0xc5,0xc6,0xc7,0xc9,0xca,0xcb,0xcd,0xce,0xcf].includes(marker)){const h=b.readUInt16BE(i+5),w=b.readUInt16BE(i+7);return b.at(-2)===0xff&&b.at(-1)===0xd9&&Math.max(w,h)<=1280&&Math.min(w,h)>=480}i+=2+len}return false}return false};
+const dossierPath=path.join(out,'dossier.json'),actual=fs.readFileSync(dossierPath);fs.unlinkSync(dossierPath);const dossier=buildDossier(out,{text_max_bytes:163840,screenshots:{max:4,max_bytes:262144},game_max_files:993,game_max_bytes:50331648,game_path_max_bytes:1000}),expected=ArrayBuffer.isView(dossier)?Buffer.from(dossier.buffer,dossier.byteOffset,dossier.byteLength):Buffer.from(typeof dossier==='string'?dossier:JSON.stringify(dossier));if(!refsOK)console.log(`BAD REF ${refs.find(p=>!p.startsWith('data:')&&(/^https?:|^\/\//i.test(p)||p.startsWith('..')||!fs.existsSync(path.join(gameRoot,p))))}`);if(!actual.equals(expected))console.log(`DOSSIER BYTES expected=${expected.length} actual=${actual.length}`);const checks={game_files:game.length>0&&game.length<=993&&bytes(game)<=50331648&&game.every(f=>fs.statSync(f).isFile()&&Buffer.byteLength(path.relative(out,f))<=1000)&&fs.statSync(path.join(out,'game/index.html')).size<=1048576,references:refsOK,screenshots:shots.length>=3&&shots.length<=4&&shots.every(f=>fs.statSync(f).size<=262144&&imageOK(f)),dossier_matches:actual.equals(expected)};fs.writeFileSync(dossierPath,actual);for(const [k,v] of Object.entries(checks))console.log(`${v?'PASS':'FAIL'} ${k}`);console.log(`PASS COUNT ${Object.values(checks).filter(Boolean).length}/4`);if(!Object.values(checks).every(Boolean))process.exitCode=1;
