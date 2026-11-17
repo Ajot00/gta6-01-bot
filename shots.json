@@ -1,6 +1,6 @@
 [
-  { "name": "1-cover.png", "query": "?shot=1" },
-  { "name": "2-busted.png", "query": "?shot=2" },
-  { "name": "3-city.png", "query": "?shot=3" },
-  { "name": "4-east.png", "query": "?shot=4" }
+  { "name": "1-cover.jpg", "query": "?shot=1", "claim": "Marina Quarter street chase" },
+  { "name": "2-busted.jpg", "query": "?shot=2", "claim": "Nia Vale on foot with Harbor Patrol" },
+  { "name": "3-city.jpg", "query": "?shot=3", "claim": "Solmere waterfront skyline at golden hour" },
+  { "name": "4-east.jpg", "query": "?shot=4", "claim": "East Promenade patrol and street life" }
 ]

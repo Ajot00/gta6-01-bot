@@ -1,8 +1,15 @@
-City: Solmere. Lead: Nia Vale. Police: Harbor Patrol. Mission: Glassline Run.
+# Solmere build log
 
-Build log
+Frozen names: Solmere, Nia Vale, Harbor Patrol, Glassline Run.
 
-- The game uses an original coastal setting and original names throughout.
-- Pass 1: city blocks, vehicle handling, golden-hour palette, and fixed shot states.
-- Pass 2: pedestrians, patrol response, wanted display, and minimap.
-- Pass 3: mission marker, objective, payout, and final presentation.
+## Pass 1 — city, car, light, shot harness
+
+Built the Marina Quarter street grid, East Promenade blocks, waterfront, parks, instanced building masses, the drivable coupe, one low golden-hour sun, and four fixed camera states at 1280×720.
+
+## Pass 2 — people, patrol, HUD
+
+Added walking street crowds, looped traffic, Harbor Patrol cruisers and officer, wanted stars, a canvas minimap, cash, health, speed, and the BUSTED frame. F raises a wanted response near witnesses; E changes between walking and driving.
+
+## Pass 3 — mission and finish
+
+Added the Glassline Run drop marker, objective, completion payout, procedural WebAudio cues, capture harness, and local dossier verifier. All environment art is procedural and all code runs locally.

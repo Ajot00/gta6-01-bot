@@ -1,6 +1,2 @@
-export const mission={x:1720,y:840,complete:false,payout:1250};
-export function updateMission(player,mission){
-  const close=Math.hypot(player.x-mission.x,player.y-mission.y)<64;
-  if(close&&!mission.complete){mission.complete=true;document.querySelector('#objective').textContent='Drop secured  ·  +$1,250';document.querySelector('#cash').textContent='$ 3,700';}
-  return close;
-}
+export function createMission(city){return {name:'GLASSLINE RUN',objective:'Reach the glassline drop',marker:city.drop,complete:false,payout:1250}}
+export function updateMission(m,player){if(!m.complete&&player.position.distanceTo(m.marker.position)<7){m.complete=true;return true}return false}

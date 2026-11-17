@@ -2,26 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Solmere — Glassline Run</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#10222c">
+  <title>Solmere | Glassline Run</title>
   <link rel="stylesheet" href="./style.css">
-  <script type="importmap">
-    {"imports":{"three":"./vendor/three/three.module.min.js","./vendor/three/three.core.js":"./vendor/three/three.core.min.js"}}
-  </script>
+  <script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js"}}</script>
 </head>
 <body>
-  <canvas id="world" width="1280" height="720" aria-label="Solmere open-world game"></canvas>
-  <div id="hud">
-    <div class="brand">SOLMERE <span>COASTAL DISTRICT</span></div>
-    <div class="mission"><small>ACTIVE JOB · GLASSLINE RUN</small><strong id="objective">Reach the glassline drop</strong><span id="timer">04:20</span></div>
-    <div class="wanted" id="wanted"></div>
-    <div class="stats"><b id="cash">$ 2,450</b><span>HEALTH <i><em></em></i></span><span id="speed">0 KM/H</span></div>
-    <canvas id="map" width="196" height="196"></canvas>
-    <div class="district" id="district">MARINA QUARTER</div>
-    <div class="hint">WASD MOVE / DRIVE <b>E</b> ENTER CAR <b>F</b> SWING <b>SPACE</b> HAND BRAKE</div>
-  </div>
-  <div id="plate" hidden><small>HARBOR PATROL</small><strong>BUSTED</strong><span>Take a breath. The city keeps moving.</span></div>
-  <div id="wasted" hidden><small>SOLMERE</small><strong>WASTED</strong></div>
+  <canvas id="map" width="220" height="220" aria-label="Solmere map"></canvas>
+  <div id="topline"><span class="brand">SOLMERE <i>COASTAL DISTRICT</i></span><span id="clock">18:42</span></div>
+  <section id="mission"><small>GLASSLINE RUN</small><strong>Reach the glassline drop</strong><span id="missionHint">Follow the gold marker · E enter / exit</span></section>
+  <section id="status"><div id="wanted">— — — — —</div><div id="money" class="money">$2,450 <span>●</span></div><div class="health"><i></i></div><div id="speed">00 <small>KM/H</small></div></section>
+  <div id="district">MARINA QUARTER</div>
+  <div id="busted"><small>HARBOR PATROL</small><strong>BUSTED</strong><span>Solmere keeps its own score.</span></div>
+  <div id="controls">W A S D MOVE / DRIVE <b>F</b> CRIME <b>E</b> ENTER CAR <b>SPACE</b> HANDBRAKE</div>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>

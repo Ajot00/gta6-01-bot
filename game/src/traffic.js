@@ -1,10 +1,6 @@
-import { WORLD } from './city.js';
-export function createTraffic(){
-  const cars=[{x:850,y:400,angle:0,speed:1.05,color:'#e8e3d8'},{x:1180,y:530,angle:Math.PI/2,speed:.8,color:'#b45b46'},{x:1510,y:400,angle:0,speed:.9,color:'#8a9b9a'},{x:520,y:900,angle:Math.PI/2,speed:.72,color:'#d2b45b'}];
-  const people=Array.from({length:24},(_,i)=>({x:690+(i%8)*45,y:720+Math.floor(i/8)*58,phase:i*.91,speed:.28+(i%3)*.08}));
-  return {cars,people};
-}
-export function updateTraffic(traffic,dt){
-  for(const car of traffic.cars){car.x+=Math.cos(car.angle)*car.speed*60*dt;car.y+=Math.sin(car.angle)*car.speed*60*dt;if(car.x>2000)car.x=420;if(car.y>1550)car.y=380;}
-  for(const p of traffic.people){p.phase+=dt*p.speed;p.x+=Math.sin(p.phase)*dt*7;p.y+=Math.cos(p.phase*.7)*dt*5;}
-}
+import * as THREE from 'three';
+
+const carMat=(c)=>new THREE.MeshStandardMaterial({color:c,roughness:.45,metalness:.16});
+export function makeCar(color=0x35535c,police=false){const root=new THREE.Group();const body=new THREE.Mesh(new THREE.BoxGeometry(4.3,1.05,2.05),carMat(color));body.position.y=.9;body.castShadow=true;body.receiveShadow=true;root.add(body);const cabin=new THREE.Mesh(new THREE.BoxGeometry(2.25,.85,1.78),new THREE.MeshStandardMaterial({color:0x253b43,roughness:.25,metalness:.28}));cabin.position.set(-.25,1.72,0);cabin.castShadow=true;root.add(cabin);for(const x of [-1.35,1.35])for(const z of [-1.04,1.04]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.22,12),carMat(0x202426));wheel.rotation.x=Math.PI/2;wheel.position.set(x,.43,z);root.add(wheel)}if(police){const bar=new THREE.Mesh(new THREE.BoxGeometry(1.2,.18,.42),new THREE.MeshBasicMaterial({color:0x4bd9ff}));bar.position.set(-.2,2.2,0);root.add(bar)}return root}
+export function createTraffic(scene){const player=makeCar(0x9e5540);player.position.set(0,0,25);scene.add(player);const cars=[];for(let i=0;i<7;i++){const car=makeCar([0x66706a,0xd2b98d,0x55727a,0x6f5047][i%4]);car.position.set(-120+i*38,0,i%2?11:39);car.rotation.y=Math.PI;scene.add(car);cars.push({mesh:car,base:car.position.x,speed:4+i%3,offset:i%2?11:39})}return {player,cars,makeCar}}
+export function updateTraffic(traffic,dt,t){for(const c of traffic.cars){c.mesh.position.x=c.base+Math.sin(t*.28+c.base)*2.4;c.mesh.position.z=c.offset+Math.sin(t*.18+c.base)*.5}}

@@ -1,6 +1,5 @@
-export function createPolice(){return {cars:[{x:490,y:405,angle:0,speed:0},{x:450,y:430,angle:0,speed:0}],officer:{x:480,y:465},wanted:0,decay:0,visible:true};}
-export function raiseWanted(police){police.wanted=Math.max(police.wanted,2);police.decay=0;}
-export function updatePolice(police,player,dt){
-  for(const cop of police.cars){const dx=player.x-cop.x,dy=player.y-cop.y,a=Math.atan2(dy,dx);cop.angle=a;cop.speed=Math.min(2.3,cop.speed+dt*.45);cop.x+=Math.cos(a)*cop.speed*58*dt;cop.y+=Math.sin(a)*cop.speed*58*dt;}
-  if(police.wanted){const nearest=police.cars[0],d=Math.hypot(nearest.x-player.x,nearest.y-player.y);police.visible=d<580;if(!police.visible){police.decay+=dt;if(police.decay>4){police.wanted=0;police.decay=0;}}else police.decay=0;}
-}
+import * as THREE from 'three';
+import { makeCar } from './traffic.js';
+
+export function createPolice(scene){const cars=[];for(let i=0;i<2;i++){const car=makeCar(0x263f4e,true);car.position.set(-14-i*8,0,54+i*10);car.rotation.y=Math.PI;scene.add(car);cars.push(car)}const officer=new THREE.Group();const body=new THREE.Mesh(new THREE.CapsuleGeometry(.55,1.4,4,8),new THREE.MeshStandardMaterial({color:0x33434b,roughness:.72}));body.position.y=1.2;body.castShadow=true;officer.add(body);const head=new THREE.Mesh(new THREE.SphereGeometry(.38,12,10),new THREE.MeshStandardMaterial({color:0xb9805b}));head.position.y=2.35;officer.add(head);const hat=new THREE.Mesh(new THREE.CylinderGeometry(.45,.45,.16,12),new THREE.MeshStandardMaterial({color:0x263940}));hat.position.y=2.7;officer.add(hat);officer.position.set(17,0,30);scene.add(officer);return {cars,officer}}
+export function updatePolice(p,player,stars,dt){for(let i=0;i<p.cars.length;i++){const car=p.cars[i];if(stars){const dx=player.position.x-car.position.x,dz=player.position.z-car.position.z;const d=Math.hypot(dx,dz)||1;car.position.x+=dx/d*dt*(5+i);car.position.z+=dz/d*dt*(5+i);car.rotation.y=Math.atan2(-dx,-dz);if(d<8){car.position.x-=dx/d*dt*2;car.position.z-=dz/d*dt*2}}}if(stars){const dx=player.position.x-p.officer.position.x,dz=player.position.z-p.officer.position.z;const d=Math.hypot(dx,dz)||1;p.officer.position.x+=dx/d*dt*3;p.officer.position.z+=dz/d*dt*3}}

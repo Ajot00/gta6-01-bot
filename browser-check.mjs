@@ -1,0 +1,24 @@
+import { fileURLToPath } from 'node:url';
+
+const url = `${new URL('./game/index.html', import.meta.url).href}?shot=0`;
+const tab = await (await fetch('http://127.0.0.1:9223/json/new?about:blank', { method: 'PUT' })).json();
+const socket = new WebSocket(tab.webSocketDebuggerUrl);
+await new Promise((resolve, reject) => { socket.onopen=resolve; socket.onerror=reject; });
+let next=0;const pending=new Map(),errors=[],requests=[];
+socket.onmessage=event=>{const msg=JSON.parse(event.data);if(msg.id&&pending.has(msg.id)){pending.get(msg.id)(msg.result||{});pending.delete(msg.id)}else if(msg.method==='Runtime.exceptionThrown')errors.push(msg.params.exceptionDetails.text||'runtime exception');else if(msg.method==='Log.entryAdded'&&msg.params.entry.level==='error')errors.push(msg.params.entry.text);else if(msg.method==='Network.requestWillBeSent')requests.push(msg.params.request.url)};
+const send=(method,params={})=>new Promise(resolve=>{const id=++next;pending.set(id,resolve);socket.send(JSON.stringify({id,method,params}));setTimeout(()=>{if(pending.has(id)){pending.delete(id);resolve({})}},10000)});
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+await send('Runtime.enable');await send('Log.enable');await send('Network.enable');await send('Page.enable');
+await send('Emulation.setDeviceMetricsOverride',{width:1280,height:720,deviceScaleFactor:1,mobile:false});
+await send('Page.navigate',{url});await wait(2500);
+const initial=await send('Runtime.evaluate',{expression:'({ready:window.__shotReady===true,gl:!!window.__game?.renderer?.getContext()})',returnByValue:true});
+const before=await send('Runtime.evaluate',{expression:'window.__game?.avatar?.position.z',returnByValue:true});
+await send('Input.dispatchKeyEvent',{type:'keyDown',key:'e',code:'KeyE',windowsVirtualKeyCode:69});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'e',code:'KeyE',windowsVirtualKeyCode:69});
+await send('Input.dispatchKeyEvent',{type:'keyDown',key:'w',code:'KeyW',windowsVirtualKeyCode:87});await wait(700);await send('Input.dispatchKeyEvent',{type:'keyUp',key:'w',code:'KeyW',windowsVirtualKeyCode:87});
+const after=await send('Runtime.evaluate',{expression:'window.__game?.avatar?.position.z',returnByValue:true});
+const details=initial.result?.value||{};const moved=Number(before.result?.value)!==Number(after.result?.value);
+const remote=requests.filter(item=>/^https?:/i.test(item));
+console.log(`browser=${details.ready&&details.gl?'PASS':'FAIL'} walking=${moved?'PASS':'FAIL'} requests=${remote.length?'FAIL':'PASS'} errors=${errors.length} ready=${details.ready} webgl=${details.gl}`);
+for(const error of errors.slice(0,5))console.log(`- ${error.slice(0,180)}`);
+socket.close();
+if(!details.ready||!details.gl||!moved||remote.length||errors.length)process.exitCode=1;
