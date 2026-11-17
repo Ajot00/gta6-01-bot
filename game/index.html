@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Solmere — Glassline Run</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <canvas id="world" width="1280" height="720" aria-label="Solmere open-world game"></canvas>
+  <div id="hud">
+    <div class="brand">SOLMERE <span>COASTAL DISTRICT</span></div>
+    <div class="mission"><small>ACTIVE JOB · GLASSLINE RUN</small><strong id="objective">Reach the glassline drop</strong><span id="timer">04:20</span></div>
+    <div class="wanted" id="wanted"></div>
+    <div class="stats"><b id="cash">$ 2,450</b><span>HEALTH <i><em></em></i></span><span id="speed">0 KM/H</span></div>
+    <canvas id="map" width="196" height="196"></canvas>
+    <div class="district" id="district">MARINA QUARTER</div>
+    <div class="hint">WASD MOVE / DRIVE <b>E</b> ENTER CAR <b>F</b> SWING <b>SPACE</b> HAND BRAKE</div>
+  </div>
+  <div id="plate" hidden><small>HARBOR PATROL</small><strong>BUSTED</strong><span>Take a breath. The city keeps moving.</span></div>
+  <div id="wasted" hidden><small>SOLMERE</small><strong>WASTED</strong></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
