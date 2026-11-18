@@ -1,1 +1,1 @@
-export const GLASSLINE={name:'Glassline Run',objective:'Deliver the Glassline package to Pier 9',checkpointCount:3,phases:[{name:'Leave Marina Quarter',distance:'2.4 km',payout:800},{name:'Cross East Promenade',distance:'1.8 km',payout:1600},{name:'Reach Pier 9',distance:'0.3 km',payout:2400}]};
+export const GLASSLINE={name:'Glassline Run',steps:['Reach Marina Quarter','Cross East Promenade','Deliver package to Pier 9'],payout:2400};

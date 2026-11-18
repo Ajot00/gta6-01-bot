@@ -1,7 +1,26 @@
-R10 single-session fix round. Captured and inspected all four final screenshots at native resolution.
+# R11 build log — STOP
 
-Visual exclusions: pyramids/monuments: none visible in shots 1–4; terrain: visibly uneven with tire tracks, but terrain intersects the road in shots 2 and 4; cars: bodies, window bands, wheels, and light bars present; officers: four modeled, though the cover staging does not read as an active pursuit; street: traffic and pedestrians are visible, but the player/police framing misses the requested close chase; lots: crate clutter is present in shots 2 and 4, but still reads as scattered boxes; grounded: box contact shadows are present, while pedestrians and some staged cars appear offset from the ground. Waterfront: dense facades, teal water, palms, and umbrellas remain visible in shot 3, with the camera too high to read beach activity.
+One-session R11 fix round based on the R10 design. Local build, four deterministic staged renders, and checks were completed. This round is **not ready for submission or a top-20 claim**; visual review showed unresolved issues and the requested final polish pass was not completed.
 
-Checks: smoke test reported zero console errors and returned HUD values after W/E/F. Browser check reported zero console/failed-request errors on each shot. Kit check: 5 passed, 0 failed, 17 skipped, 3 checked at submission. The final local verifier completed with 9/11 gates passing; dossier_matches and officers_present failed. Dossier md5 output matched, but both entry invocations emitted Node module resolution errors, so those hashes are not evidence of a valid double-run. README badge/link template was authored verbatim from the prompt.
+## Checks
 
-STOP: this build does not meet the requested visual bar or verified dossier condition. Best evidence is the four captured views and passing kit check. Blocking issues: inconsistent road/terrain intersection, poor pursuit composition, floating staged people/cars, and unresolved Node 24 TypeScript entry execution. Next untried lever: correct terrain/road geometry and ground every staged actor/vehicle, then re-stage a tighter chase and rerun dossier with a supported TypeScript runner.
+- Kit check: `5 passed, 0 failed, 17 skipped, 3 checked at submission`.
+- CDP play test: `{errors:0,requests:0,hud:{cash:"19:42 $12,500 ♥ 100",place:"MARINA QUARTER"}}`; W/E/F dispatched and target closed cleanly.
+- Browser check: all four shot URLs reported clean.
+- Dossier double-run (byte-identical): `2b45f004ced23e1f1ae2932be890b88a` and `2b45f004ced23e1f1ae2932be890b88a`.
+- No-pyramid source gate: `ConeGeometry` first arguments are `0.52` (palm fronds) and `3.8` (umbrellas), both ≤ 5. Eyeball: no pyramid/triangle mountain visible in shots 1–4.
+- Screenshots: 1-cover.jpg (109760 bytes), 2-busted.jpg (105037 bytes), 3-city.jpg (108352 bytes), 4-east.jpg (104399 bytes).
+
+## Required visual exclusions, recorded after inspecting all four native captures
+
+- Pyramids: none visible in shots 1–4; terrain: visibly uneven in geometry but the road/ground reads largely pale and contrast is poor; tire tracks do not read clearly.
+- Cars: wheels and lights exist in code, but cars read as blocky slabs at this camera scale; cover player is not fully framed as required.
+- Officers: four are staged; the cover shot does not clearly prove four officers.
+- Street: traffic and pedestrians exist; the cover is not a convincing close chase, pursuit cars are poorly framed, and the sea/palms are absent from that frame.
+- Lots: varied clutter is staged, but shot 4 clutter reads as scattered boxes rather than legible contextual micro-scenes; no black placeholder box was intentionally added.
+- Grounding: staging uses `terrainHeight` and contact shadows on several staged items, but player/contact-shadow coverage is incomplete and the shots contain severe shadow artifacts. Grounded gate is not visually passed.
+- Shot 2: Nia is not clearly readable in the captured frame. Shot 3: camera is too high, foreground rooftops dominate, and waterfront activity is not legible.
+
+## STOP reason
+
+The first capture/inspect round exposed material camera, readability, grounding, and shadow failures. The capture batch also needed a rerun to complete all four targets. I stopped after the first fix cycle rather than claiming the visual gates passed. Next untried lever: rebuild the shot camera poses and ground/shadow presentation, then repeat the native-size review. No submission was made.
