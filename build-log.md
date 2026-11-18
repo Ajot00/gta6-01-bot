@@ -1,27 +1,20 @@
-# R12 build log
+# R13 build log
 
-Status: STOP after the second and final visual fix cycle. The clean-road shadow fix is verified, but shot composition remains below the requested target. This build is committed locally for review and has not been submitted.
+Single R13 session; camera-only fix round. Direction verbatim: “Lebih jernih sama lebih bersih” — cleaner and clearer. The camera spring arm checks the full city footprint registry and shortens the arm until it clears facades by six units. Fixed shadow values, dusk palette, HUD and scene design were held to R12.
 
-Shadow-first result: the road and sidewalks follow terrainHeight. Shadow camera is tightened to ±62/±58, normalBias is 1.2, and bias is -0.003. Native-size review of shots 1, 2, and 4 found no zigzag black streaks; roads read as clean dark asphalt with lane dashes.
+Eye check after native-size capture; “jernih” and “bersih”:
+- Shot 1: clear chase road, player and patrol cars fully framed with HUD legible; patrol light bar is small at this scale. Generally jernih and bersih.
+- Shot 2: Nia is visible but tiny, the facade occupies over one third of frame, and road has dark streaks. Not sufficiently jernih or bersih.
+- Shot 3: beach, palms, colored umbrellas and teal sea read clearly; rooftops stay to the right, not across the foreground. Jernih and bersih.
+- Shot 4: red car, pedestrians, lot, prompt and label are legible, but the nearest facade takes too much of the frame and road shows dark streaks. Not fully jernih or bersih.
 
-Per-shot exclusions, reviewed at native size and as a contact sheet:
+Pyramids: none prominent in shots 1–4; terrain: uneven, tire marks visible; cars: wheels/windows/light geometry present; officers: four authored and staged; street: eight traffic cars plus two police cars and pedestrian groups; lots: micro-scene props staged, no crate grid; grounded: staged actors/cars/props use terrainHeight; shadow acne: dark streaks remain visible on shots 2 and 4 despite R12 shadow values; walls: shot 2 and shot 4 exceed the ~1/3 facade limit; clarity: shots 1 and 3 read jernih and bersih, shots 2 and 4 do not fully meet the direction.
 
-- Pyramids: none visible in shots 1–4; ConeGeometry radii are 0.5 and 3.6 only.
-- Terrain: uneven surface and sand tire-track texture are present.
-- Cars: wheels, window bands, body volumes, lights, and police bars are present.
-- Officers: four staged uniformed officers are present in shot 1.
-- Street density: traffic and pedestrians are visible; pursuit cars are fully inside the cover frame but too small to read as a close chase.
-- Lots: contextual props are staged in shots 2 and 4; several are cropped by nearby facades.
-- Grounded: staged cars, people, and props use terrainHeight and shadow receiving.
-- Shadow acne: none; roads read as clean asphalt in shots 1, 2, and 4.
-- Composition: shot 2 has a small on-foot subject and a facade blocking much of the image; shot 3 is roof heavy with only a narrow sea view; shot 4 is obstructed by a nearby facade.
+Plateau after the single camera fix cycle: shot 3 improved; shot 2 and shot 4 remain blocked by the existing footprint/staging geometry and road streaks. Next untried lever: re-stage Nia/camera relative to the sidewalk footprint and shift the East camera toward the street center while testing the frozen shadow setup's interaction with those road angles. No second iteration performed.
 
-Plateau after two visual fix cycles: shot 1 cars became too small after pulling the camera back; shot 2 and shot 4 staging positions landed too close to building facades; lowering shot 3 did not uncover enough waterfront. The next untried lever is to rebuild these stage coordinates around the actual sidewalks and shoreline, then recapture all shots.
+Final polish: raised the live chase camera anchor slightly for a clearer view over the player car. Staged shots are unchanged by this live-only adjustment.
 
-Verification: 12/12 local gates; kit check 5 passed, 0 failed, 17 skipped, 3 checked at submission. Smoke test: zero console errors, zero network requests, W/E/F responded, HUD values present. Browser check: shots 1–4 ready with zero console or network failures.
+Determinism check: dossier md5 2d4c23aa77d9221ec3ab914795f73555 on both independent main.ts runs.
+Kit check: 5 passed, 0 failed, 17 skipped, 3 checked at submission; remaining checks are server-side.
 
-Dossier double-run MD5: f3f7a1a9174d0cd5ea2d4e5e860034f0 and f3f7a1a9174d0cd5ea2d4e5e860034f0.
-
-Screenshots (1280×720 JPEG): 1-cover.jpg 123,927 bytes; 2-busted.jpg 86,930 bytes; 3-city.jpg 144,110 bytes; 4-east.jpg 85,354 bytes. Each is below 256 KiB.
-
-README badge lines match the supplied template exactly. No-pyramid check: `rg -o 'ConeGeometry\\([^,]+' game/src/` yielded only `ConeGeometry(.5` and `ConeGeometry(3.6`; visual check found no pyramid or triangle mountain in shots 1–4.
+STATUS: verification complete; 11/13 local gates pass. `no_shadow_acne` and `wall_dominance` fail against the captures; see the native-size notes above.
