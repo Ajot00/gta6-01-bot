@@ -1,26 +1,27 @@
-# R11 build log — STOP
+# R12 build log
 
-One-session R11 fix round based on the R10 design. Local build, four deterministic staged renders, and checks were completed. This round is **not ready for submission or a top-20 claim**; visual review showed unresolved issues and the requested final polish pass was not completed.
+Status: STOP after the second and final visual fix cycle. The clean-road shadow fix is verified, but shot composition remains below the requested target. This build is committed locally for review and has not been submitted.
 
-## Checks
+Shadow-first result: the road and sidewalks follow terrainHeight. Shadow camera is tightened to ±62/±58, normalBias is 1.2, and bias is -0.003. Native-size review of shots 1, 2, and 4 found no zigzag black streaks; roads read as clean dark asphalt with lane dashes.
 
-- Kit check: `5 passed, 0 failed, 17 skipped, 3 checked at submission`.
-- CDP play test: `{errors:0,requests:0,hud:{cash:"19:42 $12,500 ♥ 100",place:"MARINA QUARTER"}}`; W/E/F dispatched and target closed cleanly.
-- Browser check: all four shot URLs reported clean.
-- Dossier double-run (byte-identical): `2b45f004ced23e1f1ae2932be890b88a` and `2b45f004ced23e1f1ae2932be890b88a`.
-- No-pyramid source gate: `ConeGeometry` first arguments are `0.52` (palm fronds) and `3.8` (umbrellas), both ≤ 5. Eyeball: no pyramid/triangle mountain visible in shots 1–4.
-- Screenshots: 1-cover.jpg (109760 bytes), 2-busted.jpg (105037 bytes), 3-city.jpg (108352 bytes), 4-east.jpg (104399 bytes).
+Per-shot exclusions, reviewed at native size and as a contact sheet:
 
-## Required visual exclusions, recorded after inspecting all four native captures
+- Pyramids: none visible in shots 1–4; ConeGeometry radii are 0.5 and 3.6 only.
+- Terrain: uneven surface and sand tire-track texture are present.
+- Cars: wheels, window bands, body volumes, lights, and police bars are present.
+- Officers: four staged uniformed officers are present in shot 1.
+- Street density: traffic and pedestrians are visible; pursuit cars are fully inside the cover frame but too small to read as a close chase.
+- Lots: contextual props are staged in shots 2 and 4; several are cropped by nearby facades.
+- Grounded: staged cars, people, and props use terrainHeight and shadow receiving.
+- Shadow acne: none; roads read as clean asphalt in shots 1, 2, and 4.
+- Composition: shot 2 has a small on-foot subject and a facade blocking much of the image; shot 3 is roof heavy with only a narrow sea view; shot 4 is obstructed by a nearby facade.
 
-- Pyramids: none visible in shots 1–4; terrain: visibly uneven in geometry but the road/ground reads largely pale and contrast is poor; tire tracks do not read clearly.
-- Cars: wheels and lights exist in code, but cars read as blocky slabs at this camera scale; cover player is not fully framed as required.
-- Officers: four are staged; the cover shot does not clearly prove four officers.
-- Street: traffic and pedestrians exist; the cover is not a convincing close chase, pursuit cars are poorly framed, and the sea/palms are absent from that frame.
-- Lots: varied clutter is staged, but shot 4 clutter reads as scattered boxes rather than legible contextual micro-scenes; no black placeholder box was intentionally added.
-- Grounding: staging uses `terrainHeight` and contact shadows on several staged items, but player/contact-shadow coverage is incomplete and the shots contain severe shadow artifacts. Grounded gate is not visually passed.
-- Shot 2: Nia is not clearly readable in the captured frame. Shot 3: camera is too high, foreground rooftops dominate, and waterfront activity is not legible.
+Plateau after two visual fix cycles: shot 1 cars became too small after pulling the camera back; shot 2 and shot 4 staging positions landed too close to building facades; lowering shot 3 did not uncover enough waterfront. The next untried lever is to rebuild these stage coordinates around the actual sidewalks and shoreline, then recapture all shots.
 
-## STOP reason
+Verification: 12/12 local gates; kit check 5 passed, 0 failed, 17 skipped, 3 checked at submission. Smoke test: zero console errors, zero network requests, W/E/F responded, HUD values present. Browser check: shots 1–4 ready with zero console or network failures.
 
-The first capture/inspect round exposed material camera, readability, grounding, and shadow failures. The capture batch also needed a rerun to complete all four targets. I stopped after the first fix cycle rather than claiming the visual gates passed. Next untried lever: rebuild the shot camera poses and ground/shadow presentation, then repeat the native-size review. No submission was made.
+Dossier double-run MD5: f3f7a1a9174d0cd5ea2d4e5e860034f0 and f3f7a1a9174d0cd5ea2d4e5e860034f0.
+
+Screenshots (1280×720 JPEG): 1-cover.jpg 123,927 bytes; 2-busted.jpg 86,930 bytes; 3-city.jpg 144,110 bytes; 4-east.jpg 85,354 bytes. Each is below 256 KiB.
+
+README badge lines match the supplied template exactly. No-pyramid check: `rg -o 'ConeGeometry\\([^,]+' game/src/` yielded only `ConeGeometry(.5` and `ConeGeometry(3.6`; visual check found no pyramid or triangle mountain in shots 1–4.

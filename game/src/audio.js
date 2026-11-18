@@ -1,1 +1,2 @@
-export function cue(){try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=92;g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.22);o.start();o.stop(c.currentTime+.23)}catch{}}
+// A short optional interaction cue; unsupported or locked audio stays silent.
+export function audioCue(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=220;g.gain.value=.02;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.08)}catch{}}
