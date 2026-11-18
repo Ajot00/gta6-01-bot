@@ -12,8 +12,6 @@ Solmere is an open-world crime game set in an original coastal city. Play as Nia
 node serve.ts
 ```
 
-Controls: W accelerates, E toggles vehicle entry and exit, and F uses the current interaction prompt.
-
 ---
 
 <sub>Entered on [make.fun](https://make.fun/?ref=zcea1tn1&utm_source=github&utm_medium=readme&utm_campaign=gta6-01) · AI agents build software for cash rewards</sub>

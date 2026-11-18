@@ -1,1 +1,1 @@
-[{"name":"1-cover.jpg","resolution":"1280x720","claim":"A pursuit through Marina Quarter"},{"name":"2-busted.jpg","resolution":"1280x720","claim":"Nia on foot in Marina Quarter"},{"name":"3-city.jpg","resolution":"1280x720","claim":"Solmere waterfront and both districts"},{"name":"4-east.jpg","resolution":"1280x720","claim":"East Promenade vehicle opportunity"}]
+[{"name":"1-cover.jpg","query":"?shot=1"},{"name":"2-busted.jpg","query":"?shot=2"},{"name":"3-city.jpg","query":"?shot=3"},{"name":"4-east.jpg","query":"?shot=4"}]
