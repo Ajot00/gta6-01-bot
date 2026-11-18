@@ -1,25 +1,2 @@
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#342b42;color:#fff;font-family:Arial,Helvetica,sans-serif}
-#world{width:100%;height:100%;display:block}
-header{position:absolute;left:28px;top:20px;display:grid;gap:5px;text-shadow:0 2px 8px #241b27}
-header strong{font-size:21px;letter-spacing:5px}
-header span{font-size:10px;letter-spacing:2px;color:#f3cfaa}
-.stats{position:absolute;right:28px;top:20px;display:flex;gap:18px;align-items:center;font:15px monospace;text-shadow:0 2px 5px #302335}
-#time{color:#f5c7a2}
-#wanted{color:#ffe2aa;font-size:21px;letter-spacing:2px}
-#patrol{position:absolute;right:28px;top:64px;width:220px;padding:10px;background:#211d2be8;border-top:3px solid #f4b875;display:grid;gap:7px;font:10px monospace;letter-spacing:1px}
-#patrol b{color:#ffd3a3;font:700 11px Arial}
-#objective{position:absolute;left:28px;top:98px;width:370px;padding:12px 15px;background:#211d2be8;border-left:4px solid #f5ba70;display:grid;gap:6px;font-size:13px}
-#objective small{font:10px monospace;letter-spacing:1.4px;color:#f9d39c}
-#objective>span{font:11px monospace;color:#eadfe2}
-#place{position:absolute;left:28px;top:194px;color:#ffe0aa;font-size:24px;font-weight:800;letter-spacing:3px;text-shadow:0 3px 9px #352638}
-#busted{display:none;position:absolute;left:50%;top:22%;transform:translateX(-50%);background:#a52e32e8;border:1px solid #ffc6a0;padding:12px 22px;font-size:24px;letter-spacing:5px;box-shadow:0 8px 30px #321b1a}
-#busted small{display:block;font:9px monospace;letter-spacing:2px}
-#prompt{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);padding:12px 18px;background:#211d2be8;border:1px solid #e8c782;font-weight:bold;letter-spacing:1px}
-#speed{position:absolute;right:28px;bottom:36px;font-size:35px;font-weight:800;text-shadow:0 2px 8px #17191c}
-#speed small{font:10px monospace;letter-spacing:2px}
-#healthbar{position:absolute;right:28px;top:52px;width:90px;height:5px;background:#41313a;border:1px solid #ead2b5}
-#healthbar i{display:block;width:100%;height:100%;background:#e9a269}
-#map{position:absolute;left:28px;bottom:30px;width:132px;height:132px;border:4px solid #f5eee2;border-radius:50%;overflow:hidden;box-shadow:0 3px 15px #201e1c}
-#map canvas{width:100%;height:100%}
-#hint{display:none}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#281f39;color:#fff;font-family:Arial,sans-serif}#world{display:block;width:100vw;height:100vh}#hud{pointer-events:none}.mission,.status,.unit,.speed,.prompt,.place,.busted{position:absolute;background:#111923cf;border:1px solid #f3d09355;box-shadow:0 4px 16px #10121b66}.mission{left:30px;top:26px;padding:13px 17px;display:grid;gap:6px;min-width:330px}.mission small,.unit small{font-size:10px;letter-spacing:2px;color:#ffd68b}.mission strong{font-size:16px}.mission span{font-size:11px;color:#d5d0c7}.status{right:28px;top:26px;display:flex;gap:19px;padding:14px 16px;font:bold 15px monospace}.stars{color:#ffd454}.place{left:50%;top:26px;transform:translateX(-50%);padding:9px 15px;font-size:12px;letter-spacing:2px}.unit{left:30px;top:142px;padding:10px 13px;display:grid;gap:5px;font:11px monospace}.unit b{font-weight:600}.map{position:absolute;left:24px;bottom:23px;width:148px;height:148px;border:4px solid #f4e8d0;border-radius:50%;overflow:hidden;background:#283c43;box-shadow:0 3px 14px #090c12}.map canvas{width:100%;height:100%}.map i{position:absolute;left:65px;top:67px;color:#fff;font-style:normal;text-shadow:0 0 5px #000}.speed{right:30px;bottom:25px;padding:8px 13px;display:grid;text-align:right}.speed b{font:32px monospace;color:#fff}.speed small{font-size:10px;letter-spacing:2px;color:#ffd68b}.prompt{right:30px;bottom:107px;padding:10px 14px;font-size:12px;letter-spacing:1px}.busted{left:50%;top:112px;transform:translateX(-50%);padding:9px 18px;color:#fff;background:#a82e32e8;font-weight:900;letter-spacing:3px;display:none}.help{position:absolute;right:30px;bottom:8px;color:#fff9;font:10px monospace;text-shadow:0 1px 4px #000}
+body[data-shot="2"] .unit,body[data-shot="3"] .unit,body[data-shot="4"] .unit{display:none}body[data-shot="2"] .busted{display:block}body[data-shot="2"] .place,body[data-shot="4"] .place{top:174px;font-size:22px;letter-spacing:4px}body[data-shot="2"] .prompt{left:50%;right:auto;bottom:130px;transform:translateX(-50%);font-size:15px}body[data-shot="3"] .prompt{display:none}

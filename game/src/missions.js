@@ -1,2 +1,1 @@
-// One honest mission progresses through three backed checkpoints.
-export function missionState(){return {cash:12450,phase:2,checkpoints:3,payout:2400,distance:1.8,carsStolen:1,objective:'Deliver the Glassline package to Pier 9'}}
+export const GLASSLINE={name:'Glassline Run',objective:'Deliver the Glassline package to Pier 9',checkpointCount:3,phases:[{name:'Leave Marina Quarter',distance:'2.4 km',payout:800},{name:'Cross East Promenade',distance:'1.8 km',payout:1600},{name:'Reach Pier 9',distance:'0.3 km',payout:2400}]};
