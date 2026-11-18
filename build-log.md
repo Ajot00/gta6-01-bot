@@ -1,20 +1,62 @@
-# R13 build log
+# R14 fix round
 
-Single R13 session; camera-only fix round. Direction verbatim: “Lebih jernih sama lebih bersih” — cleaner and clearer. The camera spring arm checks the full city footprint registry and shortens the arm until it clears facades by six units. Fixed shadow values, dusk palette, HUD and scene design were held to R12.
+One session, R14. Score trend from the opening record: TokenLab 42 (R9) → 35 (R10) → 28 (R11) → 62 (R12) → 45 (R13); CrowLLM 52 → 58 → 38 → 58 → 58 (R13). Both reviewers previously said top 20: no.
 
-Eye check after native-size capture; “jernih” and “bersih”:
-- Shot 1: clear chase road, player and patrol cars fully framed with HUD legible; patrol light bar is small at this scale. Generally jernih and bersih.
-- Shot 2: Nia is visible but tiny, the facade occupies over one third of frame, and road has dark streaks. Not sufficiently jernih or bersih.
-- Shot 3: beach, palms, colored umbrellas and teal sea read clearly; rooftops stay to the right, not across the foreground. Jernih and bersih.
-- Shot 4: red car, pedestrians, lot, prompt and label are legible, but the nearest facade takes too much of the frame and road shows dark streaks. Not fully jernih or bersih.
+Art direction from the user: “Lebih jernih sama lebih bersih.” Check each image for jernih (crisp, readable) and bersih (clean, uncluttered).
 
-Pyramids: none prominent in shots 1–4; terrain: uneven, tire marks visible; cars: wheels/windows/light geometry present; officers: four authored and staged; street: eight traffic cars plus two police cars and pedestrian groups; lots: micro-scene props staged, no crate grid; grounded: staged actors/cars/props use terrainHeight; shadow acne: dark streaks remain visible on shots 2 and 4 despite R12 shadow values; walls: shot 2 and shot 4 exceed the ~1/3 facade limit; clarity: shots 1 and 3 read jernih and bersih, shots 2 and 4 do not fully meet the direction.
+## Streak diagnosis
 
-Plateau after the single camera fix cycle: shot 3 improved; shot 2 and shot 4 remain blocked by the existing footprint/staging geometry and road streaks. Next untried lever: re-stage Nia/camera relative to the sidewalk footprint and shift the East camera toward the street center while testing the frozen shadow setup's interaction with those road angles. No second iteration performed.
+The shadow-off shot 2 removed the long diagonal cast shadow on the ground, proving that streak was shadow-related. The class isolation pass then disabled building casters only; the long diagonal disappeared while the other scene shadows remained. Root cause: tall building faces and roofs casting the low dusk sun shadow across the road and adjacent lot. Fix: building faces and roofs retain shadow receiving but no longer cast shadows. Sun position, light color/intensity, shadow map, camera frustum, bias, normalBias, radius, and shadow type remain at the frozen R13 values. Short texture grain strokes remain on the asphalt; they are stable surface texture, not cast shadows or zigzag acne.
 
-Final polish: raised the live chase camera anchor slightly for a clearer view over the player car. Staged shots are unchanged by this live-only adjustment.
+## Visual review after capture 2
 
-Determinism check: dossier md5 2d4c23aa77d9221ec3ab914795f73555 on both independent main.ts runs.
-Kit check: 5 passed, 0 failed, 17 skipped, 3 checked at submission; remaining checks are server-side.
+- Shot 1: player car, two patrol cars, traffic, speed 084, sun, and HUD are readable; chase framing is clear. Buildings make the sides busy and the sea is not in frame. Jernih: mostly; bersih: mostly.
+- Shot 2: Nia is visible in red at street level, with patrol cars, officers, pedestrians, and micro-scenes. Banner is at lower third; top-right panel and all three wanted stars are unobstructed. Jernih: yes at native size; bersih: fair, with dense street context.
+- Shot 3: the camera override landed inside the waterfront building footprint. Facades fill most of the frame; beach, palms, umbrellas, and sea are not visible. Jernih: no; bersih: no. This is the plateau defect.
+- Shot 4: street, red car, pedestrian, East Promenade label, prompt, and minimap are visible. The right facade still dominates and much of the near foreground is road; lot props sit toward the sides. Jernih: fair; bersih: no because of the facade dominance.
 
-STATUS: verification complete; 11/13 local gates pass. `no_shadow_acne` and `wall_dominance` fail against the captures; see the native-size notes above.
+## Exclusion and visual gates
+
+pyramids: none visible in shots 1–4; all authored ConeGeometry first arguments are at most 3.6.
+
+terrain: uneven height function spans the playable area and sand texture includes curved tire tracks.
+
+cars: wheels, window bands, and head/tail lighting geometry present.
+
+officers: four uniformed officers staged and visible in shot 2; patrol light bars are present.
+
+street: eight traffic cars, four or more pedestrians, two police cars, and officers in cover staging.
+
+lots: contextual dumpster, stall, bench, planter, lamp, trash, debris, and pedestrians; not a crate grid. Some foreground remains open in shot 4.
+
+grounded: staged people, cars, and props use terrainHeight placement; props and vehicles cast/receive contact shadows. No floating object noticed in the reviewed shots.
+
+shadow acne: none; no long cast-shadow diagonal remains after excluding the building caster class; roads read as clean asphalt with lane dashes and short texture grain marks.
+
+walls: FAIL — shot 3 has a facade filling most of the image and shot 4 has a facade over roughly one third.
+
+banner: clear of HUD, all wanted stars visible.
+
+clarity: shot 1 mostly jernih and bersih; shot 2 jernih and fairly bersih; shot 3 fails both; shot 4 readable but not bersih because the facade dominates. The four-shot set does not fully meet “Lebih jernih sama lebih bersih.”
+
+## Plateau
+
+Both allowed capture-and-inspect fix cycles are used. Best result: shot 2 banner/HUD clearance and street staging are fixed; the long building shadow streak is diagnosed and removed. Still wrong: shot 3 camera/facade collision and shot 4 wall dominance; remaining short asphalt texture marks are not cast shadows. Next untried lever: put shot 3 camera on the open waterfront beach side of the building footprints and aim along the shore; then offset shot 4 toward the open lot while keeping the red car in the street. STOP here; no third visual cycle in R14.
+
+## Build checks
+
+Capture size: 1280×720 JPEGs; byte sizes and dossier hashes are recorded after verification below.
+
+Dossier double-run md5: 727c07e1c474bc63bbcd3cdb5438a13e / 727c07e1c474bc63bbcd3cdb5438a13e (identical).
+
+Gate summary: 13/14; wall_dominance fails for shots 3 and 4. Kit check: 5 passed, 0 failed, 17 skipped, 3 checked.
+
+No-pyramid verifier output: `NO_PYRAMID_VALUES 3.6,5,0.5`; all first arguments are ≤5. Eyeball: no cone/pyramid forms noticed in shots 1–4.
+
+Final files: 1-cover.jpg 96198 bytes; 2-busted.jpg 105729 bytes; 3-city.jpg 68775 bytes; 4-east.jpg 97795 bytes.
+
+Play test: pass, 0 console errors, 0 HTTP(S) network requests; W changes speed 084→088, E changes the prompt, F shows TALK / STEAL; mission and cash HUD values present. Browser check: shots 1–4 clean.
+
+README badge lines and entry referral line match the required template exactly.
+
+Token total: the runtime does not expose a reliable per-session token counter in this workspace; the ≤70,000 cap cannot be independently certified.
